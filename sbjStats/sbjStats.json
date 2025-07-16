@@ -1,0 +1,12 @@
+{
+  "Author": "Raya Espi",
+  "Name": "sbjStats",
+  "Punchline": "Automatically upload SBJ stast to the web interface, cutie ♥",
+  "Description": "Automatically upload SBJ stast to the web interface, cutie ♥",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "sample",
+    "plugin",
+    "sbj"
+  ]
+}
