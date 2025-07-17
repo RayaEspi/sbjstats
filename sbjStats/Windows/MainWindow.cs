@@ -2,6 +2,7 @@
 using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
+using static sbjStats.SimpleBlackjackIpc;
 
 namespace sbjStats.Windows;
 
@@ -26,6 +27,23 @@ public class MainWindow : Window, IDisposable {
         {
             //ImGui.TextUnformatted($"{_apiResponse}");
             ImGui.TextUnformatted("Heya love! The plugin is working in the background ♥");
+            
+            // If live uploading is enabled, show the status
+            if (Plugin.Configuration.EnableLiveUploading)
+            {
+                ImGui.TextUnformatted("Live uploading is enabled ^^");
+            }
+            else
+            {
+                ImGui.TextUnformatted("Live uploading is disabled. You can enable it in the settings ^^");
+            }
+            
+            // "Upload unarchived stats to the website" button, calls SendMassStatsToServer
+            if (ImGui.Button("Upload unarchived stats to the website"))
+            {
+                Plugin.SendMassStatsToServer();
+            }
+            
         }
         else
         {

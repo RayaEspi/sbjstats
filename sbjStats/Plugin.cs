@@ -70,6 +70,11 @@ public sealed class Plugin : IDalamudPlugin {
         CommandManager.RemoveHandler(CommandName);
         ECommonsMain.Dispose();
     }
+    
+    public void SendMassStatsToServer()
+    {
+        SimpleBlackjackIpc.SendMassStatsToServer();
+    }
 
     private void OnCommand(string command, string args) {
         if (!ipcInitialized) {
