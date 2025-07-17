@@ -9,6 +9,7 @@ public class ConfigWindow : Window, IDisposable
 {
     private Configuration Configuration;
     private string apiKeyInput;
+    private bool enableLiveUploadingInput;
 
     public ConfigWindow(Plugin plugin) : base("SBJStats config###config_1") {
         Flags = ImGuiWindowFlags.NoScrollbar |
@@ -23,17 +24,23 @@ public class ConfigWindow : Window, IDisposable
 
         Configuration = plugin.Configuration;
         apiKeyInput = Configuration.ApiKey ?? string.Empty;
+        enableLiveUploadingInput = Configuration.EnableLiveUploading;
     }
 
     public void Dispose() { }
 
     public override void Draw() {
-        // API key field
         ImGui.InputText("API Key", ref apiKeyInput, 64);
+        
+        if (ImGui.Checkbox("Enable live uploading", ref enableLiveUploadingInput)) {
+            Configuration.EnableLiveUploading = enableLiveUploadingInput;
+            Configuration.Save();
+        }
 
         if (ImGui.Button("Save"))
         {
             Configuration.ApiKey = apiKeyInput;
+            Configuration.EnableLiveUploading = enableLiveUploadingInput;
             Configuration.Save();
             ImGui.TextUnformatted("Configuration saved successfully.");
         }

@@ -19,6 +19,7 @@ public class Configuration : IPluginConfiguration {
             }
         }
     }
+    public bool EnableLiveUploading { get; set; } = false;
     private string _apiKey = "";
 
     public void Save()
