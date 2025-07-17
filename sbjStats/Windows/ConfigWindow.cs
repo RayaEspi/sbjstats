@@ -33,7 +33,7 @@ public class ConfigWindow : Window, IDisposable
 
         if (ImGui.Button("Save"))
         {
-            Configuration.ApiKey = apiKeyInput; // This will trigger the event
+            Configuration.ApiKey = apiKeyInput;
             Configuration.Save();
             ImGui.TextUnformatted("Configuration saved successfully.");
         }

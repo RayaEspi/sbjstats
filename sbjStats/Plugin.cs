@@ -87,8 +87,6 @@ public sealed class Plugin : IDalamudPlugin {
             var stats = SimpleBlackjackIpc.GetStats(Guid.Empty.ToString());
             Log.Information(Newtonsoft.Json.JsonConvert.SerializeObject(stats));
             
-            // Log all stats seperately
-            
             Log.Information("========== Current Stats ==========");
             if (stats.Count == 0) {
                 Log.Information("No stats available.");
@@ -110,15 +108,11 @@ public sealed class Plugin : IDalamudPlugin {
     private void DrawUI() => WindowSystem.Draw();
     public void ToggleConfigUI() => ConfigWindow.Toggle();
     public void ToggleMainUI() => MainWindow.Toggle();
-
-    // TODO: Implement actual data handling logic
     private List<StatsRecording> HandleGetStats(string archiveId) {
-        // Fetch stats recordings for the given archive ID
         return new List<StatsRecording>();
     }
 
     private Dictionary<string, string> HandleGetArchives() {
-        // Return available archives
         return new Dictionary<string, string>();
     }
 }

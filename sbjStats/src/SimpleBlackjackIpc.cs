@@ -25,21 +25,6 @@ public class SimpleBlackjackIpc {
     [EzIPC] public Func<Dictionary<string, string>> GetArchives;
     [EzIPCEvent]
     public void OnGameFinished() {
-        // GetStats will be called when the game is finished
-        // example output of getstats (single entry)
-        // [{"Time":1752658471367,"BetsCollected":0,"Payouts":0,"Players":["Lini Espi@Sagittarius","Raya Espi@Sagittarius"],"Saved":false,"ArchiveID":"00000000-0000-0000-0000-000000000000","Hands":[{"PlayerName":"Lini Espi@Sagittarius","Cards":[1,1],"SplitNum":0,"Bet":0,"Payout":0,"IsDoubleDown":false,"Result":3,"Dealer":false},{"PlayerName":"Raya Espi@Sagittarius","Cards":[1,11],"SplitNum":0,"Bet":0,"Payout":0,"IsDoubleDown":false,"Result":5,"Dealer":true}]}]
-        // Now send the stats to the server with bearer auth api key from config
-        // server expects:
-         // Import a single game data point into the database.
-         // @param {Object} data - The data payload
-         // @param {string} data.datetime    - Date/time string in "DD/MM/YYYY HH:mm:ss" format
-         // @param {string} data.players     - Comma-separated player names
-         // @param {string} data.collected   - Collected amount (with thousand separators)
-         // @param {string} data.paid        - Paid amount (with thousand separators)
-         // @param {string} data.profit      - Profit amount (with thousand separators)
-         // @param {string} data.details     - Base64-encoded JSON of hands section
-         
-         
         PluginLog.Information("OnGameFinished called in SimpleBlackjackIpc.");
         if (GetStats == null) {
             PluginLog.Error("GetStats is null in SimpleBlackjackIpc.OnGameFinished.");
@@ -71,15 +56,6 @@ public class SimpleBlackjackIpc {
 
     public void SendStatToServer(sbjStats.StatsRecording stat)
     {
-        // server endpoint is https://api.espi-couple.com/sbj/import
-        // and it expects a POST request with the following JSON body:
-        
-        // @param {string} data.datetime    - Date/time string in "DD/MM/YYYY HH:mm:ss" format
-        // @param {string} data.players     - Comma-separated player names
-        // @param {string} data.collected   - Collected amount (with thousand separators)
-        // @param {string} data.paid        - Paid amount (with thousand separators)
-        // @param {string} data.profit      - Profit amount (with thousand separators)
-        // @param {string} data.details     - Base64-encoded JSON of hands section
         var apiKey = Plugin.PluginInterface.GetPluginConfig() is Configuration config ? config.ApiKey : "";
         if (string.IsNullOrWhiteSpace(apiKey))
         {
@@ -92,7 +68,7 @@ public class SimpleBlackjackIpc {
             var players = string.Join(", ", stat.Players);
             var collected = stat.BetsCollected.ToString("N0");
             var paid = stat.Payouts.ToString("N0");
-            var profit = (stat.Payouts - stat.BetsCollected).ToString("N0");
+            var profit = (stat.BetsCollected - stat.Payouts).ToString("N0");
             var handsJson = Newtonsoft.Json.JsonConvert.SerializeObject(stat.Hands);
             var details = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(handsJson));
 
