@@ -119,14 +119,18 @@ public class SimpleBlackjackIpc
                                   ? "Mass stats sent successfully."
                                   : "Stat sent successfully.";
                 PluginLog.Information(message);
+                Plugin.ChatGui.Print("[SBJStats] Upload successful! ♥");
             }
             else
             {
                 var typeLabel = payload is IEnumerable<object> ? "mass stats" : "stat";
                 PluginLog.Error(
                     $"Failed to send {typeLabel}. Status: {response.StatusCode}, Reason: {response.ReasonPhrase}");
+                Plugin.ChatGui.Print("[SBJStats] Upload failed q.q");
             }
         }
+        
+        Plugin.ChatGui.Print("Hello world!");
     }
     
     public void SendStatToServer(StatsRecording stat)
