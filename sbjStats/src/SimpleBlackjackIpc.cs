@@ -130,7 +130,6 @@ public class SimpleBlackjackIpc
             }
         }
         
-        Plugin.ChatGui.Print("Hello world!");
     }
     
     public void SendStatToServer(StatsRecording stat)
@@ -196,7 +195,7 @@ public class StatsRecording
 public class HandStat
 {
     public string PlayerName;
-    public List<Card> Cards;
+    public List<Card> Cards = new();
     public int SplitNum = 0;
     public int Bet = 0;
     public int Payout = 0;
