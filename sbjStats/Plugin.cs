@@ -13,10 +13,10 @@ using ECommons.Logging;
 namespace sbjStats;
 
 public sealed class Plugin : IDalamudPlugin {
-    [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
-    [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
-    [PluginService] internal static IPluginLog Log { get; private set; } = null!;
-    [PluginService] public static IChatGui ChatGui { get; private set; } = null!;
+    [PluginService] internal static IDalamudPluginInterface PluginInterface { get; set; } = null!;
+    [PluginService] internal static ICommandManager CommandManager { get; set; } = null!;
+    [PluginService] internal static IPluginLog Log { get; set; } = null!;
+    [PluginService] public static IChatGui ChatGui { get; set; } = null!;
 
     private const string CommandName = "/sbjstats";
 
@@ -28,7 +28,18 @@ public sealed class Plugin : IDalamudPlugin {
     private bool ipcInitialized = false;
 
     public Plugin() {
-        ECommonsMain.Init(PluginInterface, this, Module.DalamudReflector);
+        try
+        {
+            // Initialize ECommons fully so logging is available during init
+            ECommonsMain.Init(PluginInterface, this, Module.All);
+        }
+        catch (Exception ex)
+        {
+            // Use Dalamud's IPluginLog (already injected) to report init issues
+            Log.Error($"ECommons init failed: {ex}");
+            // Optional: rethrow to prevent loading without ECommons
+            // throw;
+        }
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
         ConfigWindow = new ConfigWindow(this);
@@ -59,7 +70,7 @@ public sealed class Plugin : IDalamudPlugin {
             Log.Information("IPC initialized.");
         } catch (Exception ex)
         {
-            Log.Error($"Failed to initialize IPC: {ex.Message}");
+            Log.Information($"Failed to initialize IPC: {ex.Message}");
             ipcInitialized = false;
         }
     }
@@ -69,7 +80,7 @@ public sealed class Plugin : IDalamudPlugin {
         ConfigWindow.Dispose();
         MainWindow.Dispose();
         CommandManager.RemoveHandler(CommandName);
-        ECommonsMain.Dispose();
+        CommandManager.RemoveHandler(CommandName);
     }
     
     public void SendMassStatsToServer()
